@@ -25,3 +25,14 @@ The MCP server sits between your AI client and your internal systems. It handles
 **Authentication:** Verifies who's making the request
 
 Resource: https://www.freecodecamp.org/news/how-to-build-mcp-servers-for-your-internal-data/
+
+
+
+**Core MCP Concepts**
+MCP servers can provide three main types of capabilities:
+Resources: File-like data that can be read by clients (like API responses or file contents)
+Tools: Functions that can be called by the LLM (with user approval)
+Prompts: Pre-written templates that help users accomplish specific tasks
+
+
+**Documentation**: https://modelcontextprotocol.io/docs/develop/build-server
