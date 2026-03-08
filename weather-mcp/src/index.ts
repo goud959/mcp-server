@@ -12,8 +12,6 @@ const server = new McpServer({
 });
 
 // Helper function for making NWS API requests
-
-// Helper function for making NWS API requests
 async function makeNWSRequest<T>(url: string): Promise<T | null> {
   const headers = {
     "User-Agent": USER_AGENT,
