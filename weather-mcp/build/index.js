@@ -4,7 +4,11 @@ import { z } from "zod";
 const NWS_API_BASE = "https://api.weather.gov";
 const USER_AGENT = "weather-app/1.0";
 // Create server instance
-const server = new McpServer({ name: "weather", version: "1.0.0" }, { capabilities: { tools: {}, resources: {} } });
+const server = new McpServer({
+    name: "weather",
+    version: "1.0.0",
+});
+// Helper function for making NWS API requests
 // Helper function for making NWS API requests
 async function makeNWSRequest(url) {
     const headers = {
@@ -36,8 +40,14 @@ function formatAlert(feature) {
     ].join("\n");
 }
 // Register weather tools
-server.tool("get-alerts", "Get weather alerts for a state", {
-    state: z.string().length(2).describe("Two-letter state code (e.g. CA, NY)"),
+server.registerTool("get_alerts", {
+    description: "Get weather alerts for a state",
+    inputSchema: {
+        state: z
+            .string()
+            .length(2)
+            .describe("Two-letter state code (e.g. CA, NY)"),
+    },
 }, async ({ state }) => {
     const stateCode = state.toUpperCase();
     const alertsUrl = `${NWS_API_BASE}/alerts?area=${stateCode}`;
@@ -74,9 +84,20 @@ server.tool("get-alerts", "Get weather alerts for a state", {
         ],
     };
 });
-server.tool("get-forecast", "Get weather forecast for a location", {
-    latitude: z.number().min(-90).max(90).describe("Latitude of the location"),
-    longitude: z.number().min(-180).max(180).describe("Longitude of the location"),
+server.registerTool("get_forecast", {
+    description: "Get weather forecast for a location",
+    inputSchema: {
+        latitude: z
+            .number()
+            .min(-90)
+            .max(90)
+            .describe("Latitude of the location"),
+        longitude: z
+            .number()
+            .min(-180)
+            .max(180)
+            .describe("Longitude of the location"),
+    },
 }, async ({ latitude, longitude }) => {
     // Get grid point data
     const pointsUrl = `${NWS_API_BASE}/points/${latitude.toFixed(4)},${longitude.toFixed(4)}`;
@@ -143,6 +164,7 @@ server.tool("get-forecast", "Get weather forecast for a location", {
         ],
     };
 });
+// Start server with stdio transport
 async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
